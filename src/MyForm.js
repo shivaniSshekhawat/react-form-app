@@ -83,7 +83,7 @@ const MyForm = () => {
                 label="Gender"
                 error={!!errors.gender}
               >
-                <MenuItem value="" disabled>
+                <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
                 <MenuItem value="male">Male</MenuItem>
