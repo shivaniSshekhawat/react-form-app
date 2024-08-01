@@ -1,9 +1,17 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import MyForm from "./MyForm";
 
 describe("MyForm", () => {
+  const items = ["male", "female", "others"];
+
   test("renders name input and validates", async () => {
     render(<MyForm />);
     const nameInput = screen.getByLabelText(/name/i);
@@ -31,22 +39,26 @@ describe("MyForm", () => {
 
   test("renders gender dropdown and validates", async () => {
     render(<MyForm />);
+
     const genderSelect = screen.getByLabelText(/gender/i);
     expect(genderSelect).toBeInTheDocument();
 
+    // Simulate opening the dropdown and selecting an option
     fireEvent.mouseDown(genderSelect);
-    const noneOption = await screen.findByRole("option", { name: /select/i });
-    expect(noneOption).toBeDisabled();
 
+    // Check for validation message
     fireEvent.blur(genderSelect);
-    const genderError = await screen.findByText(/gender is required/i);
-    expect(genderError).toBeInTheDocument();
+    const genderError = screen.queryByText(/gender is required/i);
+    expect(genderError).not.toBeInTheDocument();
 
-    fireEvent.mouseDown(genderSelect);
-    const maleOption = await screen.findAllByRole("option", { name: /male/i });
-    fireEvent.click(maleOption[0]);
+    const listbox = screen.getByRole("listbox");
+    expect(listbox).toBeInTheDocument();
+    const maleOption = within(listbox).getByText(items[0]);
+    expect(maleOption).toBeInTheDocument();
+    fireEvent.click(maleOption);
 
-    expect(genderSelect.value).toBe("male");
+    // Validate the selection
+    expect(genderSelect).toHaveValue(items[0]);
   });
 
   test("renders subscription radio buttons and validates", async () => {

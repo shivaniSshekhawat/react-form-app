@@ -20,11 +20,15 @@ const MyForm = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onBlur",
+  });
 
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  const items = ["male", "female", "others"];
 
   return (
     <Box sx={{ mt: 4, maxWidth: 400, mx: "auto" }}>
@@ -86,9 +90,9 @@ const MyForm = () => {
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
-                <MenuItem value="male">Male</MenuItem>
-                <MenuItem value="female">Female</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
+                {items.map((item) => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
               </Select>
             )}
           />
