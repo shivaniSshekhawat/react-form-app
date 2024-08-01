@@ -8,6 +8,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import MyForm from "./MyForm";
+import userEvent from "@testing-library/user-event";
 
 describe("MyForm", () => {
   const items = ["male", "female", "others"];
@@ -43,10 +44,8 @@ describe("MyForm", () => {
     const genderSelect = screen.getByLabelText(/gender/i);
     expect(genderSelect).toBeInTheDocument();
 
-    // Simulate opening the dropdown and selecting an option
     fireEvent.mouseDown(genderSelect);
 
-    // Check for validation message
     fireEvent.blur(genderSelect);
     const genderError = screen.queryByText(/gender is required/i);
     expect(genderError).not.toBeInTheDocument();
@@ -56,8 +55,8 @@ describe("MyForm", () => {
     const maleOption = within(listbox).getByText(items[0]);
     expect(maleOption).toBeInTheDocument();
     fireEvent.click(maleOption);
+    // userEvent.selectOptions(maleOption);
 
-    // Validate the selection
     expect(genderSelect).toHaveValue(items[0]);
   });
 
